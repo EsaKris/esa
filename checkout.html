@@ -1,0 +1,1142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Esakris | Enroll</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Paystack Inline JS -->
+  <script src="https://js.paystack.co/v1/inline.js"></script>
+  <style>
+    :root {
+      --bg: #FFFFFF;
+      --bg-off: #F7F7F5;
+      --text: #111111;
+      --muted: #555555;
+      --accent: #2563EB;
+      --accent-dark: #1D4ED8;
+      --success: #16A34A;
+      --success-bg: rgba(22,163,74,0.07);
+      --error: #DC2626;
+      --border: #E4E4E4;
+      --border-focus: #2563EB;
+      --font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      --radius: 8px;
+      --radius-lg: 14px;
+      --shadow: 0 2px 12px rgba(0,0,0,0.06);
+      --shadow-lg: 0 8px 40px rgba(0,0,0,0.10);
+      --ease: cubic-bezier(0.16,1,0.3,1);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html {
+      font-family: var(--font);
+      font-size: 16px;
+      line-height: 1.6;
+      background: var(--bg-off);
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body { min-height: 100vh; }
+
+    /* ── Top bar ── */
+    .topbar {
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      padding: 0 2rem;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .topbar-logo {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 1.2rem;
+      font-weight: 700;
+      letter-spacing: -0.04em;
+      color: var(--text);
+      text-decoration: none;
+    }
+    .topbar-logo svg { flex-shrink: 0; }
+    .topbar-secure {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--muted);
+    }
+    .topbar-secure svg { color: var(--success); }
+
+    /* ── Steps indicator ── */
+    .steps-bar {
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      padding: 0 2rem;
+    }
+    .steps-inner {
+      max-width: 900px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      height: 52px;
+      gap: 0;
+    }
+    .step {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-size: 0.82rem;
+      font-weight: 500;
+      color: var(--muted);
+      padding: 0 1rem 0 0;
+    }
+    .step:first-child { padding-left: 0; }
+    .step-num {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      border: 1.5px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.72rem;
+      font-weight: 700;
+      flex-shrink: 0;
+      transition: all 0.25s var(--ease);
+    }
+    .step.active { color: var(--text); }
+    .step.active .step-num {
+      background: var(--text);
+      border-color: var(--text);
+      color: #fff;
+    }
+    .step.done { color: var(--success); }
+    .step.done .step-num {
+      background: var(--success);
+      border-color: var(--success);
+      color: #fff;
+    }
+    .step-divider {
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+      margin: 0 0.75rem;
+      max-width: 60px;
+    }
+    .step.done + .step-divider { background: var(--success); }
+
+    /* ── Layout ── */
+    .checkout-layout {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 2.5rem 1.5rem 5rem;
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 1.5rem;
+      align-items: start;
+    }
+    .checkout-main { min-width: 0; }
+    .checkout-aside { min-width: 0; }
+
+    /* ── Card ── */
+    .card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      box-shadow: var(--shadow);
+    }
+    .card + .card { margin-top: 1rem; }
+    .card-title {
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 1.5rem;
+      color: var(--text);
+    }
+
+    /* ── Course picker ── */
+    .course-options { display: flex; flex-direction: column; gap: 0.75rem; }
+    .course-option {
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.1rem 1.25rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      transition: all 0.2s var(--ease);
+      position: relative;
+    }
+    .course-option:hover { border-color: #BBBBBB; background: var(--bg-off); }
+    .course-option.selected {
+      border-color: var(--accent);
+      background: rgba(37,99,235,0.03);
+    }
+    .course-radio {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      border: 2px solid var(--border);
+      flex-shrink: 0;
+      transition: all 0.2s var(--ease);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .course-option.selected .course-radio {
+      border-color: var(--accent);
+      background: var(--accent);
+    }
+    .course-option.selected .course-radio::after {
+      content: '';
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #fff;
+    }
+    .course-info { flex: 1; }
+    .course-name { font-size: 0.95rem; font-weight: 600; color: var(--text); }
+    .course-meta { font-size: 0.8rem; color: var(--muted); margin-top: 0.1rem; }
+    .course-price {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text);
+      text-align: right;
+    }
+    .course-price-sub { font-size: 0.75rem; color: var(--muted); font-weight: 400; }
+    .popular-tag {
+      position: absolute;
+      top: -10px;
+      right: 1rem;
+      background: var(--accent);
+      color: #fff;
+      font-size: 0.68rem;
+      font-weight: 700;
+      padding: 0.2rem 0.6rem;
+      border-radius: 99px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    /* ── Form ── */
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .form-row.single { grid-template-columns: 1fr; }
+    .form-group { margin-bottom: 1.1rem; }
+    .form-label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 0.4rem;
+      letter-spacing: 0.01em;
+    }
+    .form-input {
+      width: 100%;
+      padding: 0.7rem 0.9rem;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      font-family: var(--font);
+      font-size: 0.9rem;
+      color: var(--text);
+      background: var(--bg);
+      transition: border-color 0.2s var(--ease), box-shadow 0.2s var(--ease);
+      outline: none;
+      appearance: none;
+    }
+    .form-input:focus {
+      border-color: var(--border-focus);
+      box-shadow: 0 0 0 3px rgba(37,99,235,0.12);
+    }
+    .form-input.error { border-color: var(--error); }
+    .form-input::placeholder { color: #AAAAAA; }
+    .form-hint { font-size: 0.75rem; color: var(--muted); margin-top: 0.3rem; }
+    .form-error { font-size: 0.75rem; color: var(--error); margin-top: 0.3rem; display: none; }
+    .form-input.error + .form-error { display: block; }
+
+    /* Section divider */
+    .section-divider {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin: 1.5rem 0 1.25rem;
+    }
+    .section-divider hr { flex: 1; border: none; border-top: 1px solid var(--border); }
+    .section-divider span { font-size: 0.78rem; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; white-space: nowrap; }
+
+    /* Submit button */
+    .btn-submit {
+      width: 100%;
+      padding: 0.95rem;
+      background: var(--text);
+      color: #fff;
+      border: none;
+      border-radius: var(--radius);
+      font-family: var(--font);
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s var(--ease);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      position: relative;
+      overflow: hidden;
+      letter-spacing: -0.01em;
+    }
+    .btn-submit:hover { background: #222; transform: translateY(-1px); box-shadow: 0 4px 16px rgba(0,0,0,0.15); }
+    .btn-submit:active { transform: translateY(0); }
+    .btn-submit.loading { pointer-events: none; }
+    .btn-submit .spinner {
+      width: 18px; height: 18px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      display: none;
+    }
+    .btn-submit.loading .spinner { display: block; }
+    .btn-submit.loading .btn-label { opacity: 0.6; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .pay-note {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-top: 0.85rem;
+    }
+
+    .paystack-badge {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 1rem;
+      background: var(--bg-off);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      margin-bottom: 1.5rem;
+      font-size: 0.85rem;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    /* ── Aside: Order summary ── */
+    .summary-course {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      padding-bottom: 1.25rem;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 1.25rem;
+    }
+    .summary-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 8px;
+      background: var(--bg-off);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      flex-shrink: 0;
+    }
+    .summary-course-name { font-size: 0.92rem; font-weight: 600; }
+    .summary-course-meta { font-size: 0.78rem; color: var(--muted); margin-top: 0.1rem; }
+
+    .summary-line {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.87rem;
+      margin-bottom: 0.65rem;
+    }
+    .summary-line .label { color: var(--muted); }
+    .summary-line .value { font-weight: 500; color: var(--text); }
+    .summary-total {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 1rem;
+      font-weight: 700;
+      margin-top: 0.75rem;
+      padding-top: 0.75rem;
+      border-top: 1px solid var(--border);
+    }
+    .summary-total .value { font-size: 1.3rem; }
+
+    .includes-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.55rem;
+      margin-top: 1.25rem;
+    }
+    .includes-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+    .includes-list li::before {
+      content: '✓';
+      color: var(--success);
+      font-weight: 700;
+      flex-shrink: 0;
+      margin-top: 0.05rem;
+    }
+
+    .trust-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.6rem;
+      margin-top: 1.1rem;
+    }
+    .trust-item {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+
+    /* ── Page views ── */
+    .page { display: none; }
+    .page.active { display: block; }
+
+    /* ── Success page ── */
+    .success-wrap {
+      max-width: 580px;
+      margin: 4rem auto;
+      padding: 0 1.5rem;
+    }
+    .success-card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 3rem 2.5rem;
+      box-shadow: var(--shadow-lg);
+      text-align: center;
+    }
+    .success-icon-wrap {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      background: var(--success-bg);
+      border: 2px solid rgba(22,163,74,0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1.75rem;
+      animation: pop 0.4s var(--ease) both;
+    }
+    @keyframes pop {
+      from { transform: scale(0.6); opacity: 0; }
+      to   { transform: scale(1);   opacity: 1; }
+    }
+    .success-icon-wrap svg { color: var(--success); }
+    .success-card h1 {
+      font-size: 1.65rem;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      margin-bottom: 0.6rem;
+    }
+    .success-card .success-sub {
+      font-size: 1rem;
+      color: var(--muted);
+      max-width: 420px;
+      margin: 0 auto 1.5rem;
+    }
+
+    .redirect-note {
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-bottom: 1.5rem;
+    }
+    .redirect-note strong { color: var(--success); }
+
+    .receipt-box {
+      background: var(--bg-off);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 2rem;
+      text-align: left;
+    }
+    .receipt-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.85rem;
+      padding: 0.4rem 0;
+    }
+    .receipt-row:not(:last-child) { border-bottom: 1px solid var(--border); }
+    .receipt-row .r-label { color: var(--muted); }
+    .receipt-row .r-value { font-weight: 600; color: var(--text); }
+    .receipt-row.total .r-value { color: var(--text); font-size: 1rem; }
+
+    .next-steps {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      margin-bottom: 2rem;
+      text-align: left;
+    }
+    .next-step {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.85rem;
+      padding: 0.9rem 1rem;
+      background: var(--bg-off);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+    }
+    .next-step-num {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: var(--text);
+      color: #fff;
+      font-size: 0.72rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 0.05rem;
+    }
+    .next-step-text h5 { font-size: 0.88rem; font-weight: 600; margin-bottom: 0.1rem; }
+    .next-step-text p { font-size: 0.78rem; color: var(--muted); }
+
+    .btn-home {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.8rem 2rem;
+      background: #25D366;
+      color: #fff;
+      border-radius: var(--radius);
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s var(--ease);
+      cursor: pointer;
+      border: none;
+      font-family: var(--font);
+    }
+    .btn-home:hover { background: #1fb457; transform: translateY(-1px); }
+
+    /* ── Responsive ── */
+    @media (max-width: 700px) {
+      .checkout-layout {
+        grid-template-columns: 1fr;
+        padding: 1.5rem 1rem 4rem;
+      }
+      .checkout-aside { order: -1; }
+      .form-row { grid-template-columns: 1fr; }
+      .trust-row { grid-template-columns: 1fr; }
+      .success-card { padding: 2rem 1.25rem; }
+      .topbar { padding: 0 1rem; }
+      .steps-bar { padding: 0 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top bar -->
+  <header class="topbar">
+    <a href="index.html" class="topbar-logo">
+      <svg width="28" height="28" viewBox="0 0 34 34" fill="none">
+        <rect width="34" height="34" rx="8" fill="#111"/>
+        <path d="M9 11.5H19.5M9 17H22.5M9 22.5H16" stroke="white" stroke-width="2.2" stroke-linecap="round"/>
+        <circle cx="26" cy="22.5" r="3.5" fill="#2563EB"/>
+      </svg>
+      Esakris
+    </a>
+    <div class="topbar-secure">
+      <svg width="13" height="13" fill="currentColor" viewBox="0 0 20 20">
+        <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/>
+      </svg>
+      Secure checkout
+    </div>
+  </header>
+
+  <!-- Steps -->
+  <div class="steps-bar" id="stepsBar">
+    <div class="steps-inner">
+      <div class="step active" id="step1">
+        <div class="step-num">1</div>
+        <span>Course</span>
+      </div>
+      <div class="step-divider"></div>
+      <div class="step" id="step2">
+        <div class="step-num">2</div>
+        <span>Payment</span>
+      </div>
+      <div class="step-divider"></div>
+      <div class="step" id="step3">
+        <div class="step-num">3</div>
+        <span>Confirmed</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════ PAGE 1: COURSE SELECTION ═══════════ -->
+  <div class="page active" id="page-course">
+    <div class="checkout-layout">
+      <div class="checkout-main">
+
+        <div class="card">
+          <div class="card-title">Choose your program</div>
+          <div class="course-options" id="courseOptions">
+
+            <div class="course-option selected" data-course="fullstack" data-price="1499" data-label="Full Stack Web Development" data-duration="24 Weeks" data-icon="🌐">
+              <div class="course-radio"></div>
+              <div class="course-info">
+                <div class="course-name">Full Stack Web Development</div>
+                <div class="course-meta">24 Weeks · Beginner to Pro</div>
+              </div>
+              <div class="course-price">$1,499<div class="course-price-sub">one-time</div></div>
+            </div>
+
+            <div class="course-option" data-course="backend" data-price="1199" data-label="Backend Development (Python)" data-duration="16 Weeks" data-icon="⚙️">
+              <div class="course-radio"></div>
+              <div class="course-info">
+                <div class="course-name">Backend Development (Python)</div>
+                <div class="course-meta">16 Weeks · Intermediate Target</div>
+              </div>
+              <div class="course-price">$1,199<div class="course-price-sub">one-time</div></div>
+            </div>
+
+            <div class="course-option" data-course="mobile" data-price="1350" data-label="Mobile App Development" data-duration="20 Weeks" data-icon="📱">
+              <div class="popular-tag">Most Popular</div>
+              <div class="course-radio"></div>
+              <div class="course-info">
+                <div class="course-name">Mobile App Development</div>
+                <div class="course-meta">20 Weeks · Beginner Friendly</div>
+              </div>
+              <div class="course-price">$1,350<div class="course-price-sub">one-time</div></div>
+            </div>
+
+            <div class="course-option" data-course="cyber" data-price="1499" data-label="Cybersecurity" data-duration="24 Weeks" data-icon="🛡️">
+              <div class="course-radio"></div>
+              <div class="course-info">
+                <div class="course-name">Cybersecurity</div>
+                <div class="course-meta">24 Weeks · Comprehensive Track</div>
+              </div>
+              <div class="course-price">$1,499<div class="course-price-sub">one-time</div></div>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="card" style="margin-top:1rem;">
+          <div class="card-title">Your details</div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="firstName">First name</label>
+              <input class="form-input" type="text" id="firstName" placeholder="John">
+              <div class="form-error">Required</div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="lastName">Last name</label>
+              <input class="form-input" type="text" id="lastName" placeholder="Doe">
+              <div class="form-error">Required</div>
+            </div>
+          </div>
+          <div class="form-row single">
+            <div class="form-group">
+              <label class="form-label" for="email">Email address</label>
+              <input class="form-input" type="email" id="email" placeholder="john@email.com">
+              <div class="form-hint">Your confirmation and course materials will be sent here.</div>
+              <div class="form-error">Enter a valid email address</div>
+            </div>
+          </div>
+          <div class="form-row single">
+            <div class="form-group">
+              <label class="form-label" for="phone">Phone number</label>
+              <input class="form-input" type="tel" id="phone" placeholder="+234 800 000 0000">
+              <div class="form-error">Please enter your phone number</div>
+            </div>
+          </div>
+          <div class="form-row single">
+            <div class="form-group">
+              <label class="form-label" for="hearAbout">How did you hear about us?</label>
+              <select class="form-input" id="hearAbout" onchange="toggleFriendName()">
+                <option value="">Select an option</option>
+                <option value="Social Media">Social Media</option>
+                <option value="Friend">A Friend</option>
+              </select>
+              <div class="form-error">Please select an option</div>
+            </div>
+          </div>
+          <div class="form-row single" id="friendNameGroup" style="display:none;">
+            <div class="form-group">
+              <label class="form-label" for="friendName">Friend's name</label>
+              <input class="form-input" type="text" id="friendName" placeholder="Enter your friend's name">
+              <div class="form-error">Please enter your friend's name</div>
+            </div>
+          </div>
+          <button class="btn-submit" onclick="goToPayment()">
+            <span class="btn-label">Continue to payment</span>
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </button>
+        </div>
+
+      </div>
+
+      <!-- Aside -->
+      <div class="checkout-aside">
+        <div class="card">
+          <div class="card-title">Order summary</div>
+          <div class="summary-course">
+            <div class="summary-icon" id="sumIcon">🌐</div>
+            <div>
+              <div class="summary-course-name" id="sumName">Full Stack Web Development</div>
+              <div class="summary-course-meta" id="sumMeta">24 Weeks · Mentorship + Projects</div>
+            </div>
+          </div>
+          <div class="summary-line">
+            <span class="label">Tuition</span>
+            <span class="value" id="sumPrice">$1,499</span>
+          </div>
+          <div class="summary-line">
+            <span class="label">Enrollment fee</span>
+            <span class="value" style="color:var(--success)">Waived</span>
+          </div>
+          <div class="summary-total">
+            <span>Total today</span>
+            <span class="value" id="sumTotal">$1,499</span>
+          </div>
+          <ul class="includes-list">
+            <li>Structured curriculum + live sessions</li>
+            <li>1-on-1 mentor code reviews</li>
+            <li>Accountability monitoring system</li>
+            <li>4 production-scale projects</li>
+            <li>Verified certificate on completion</li>
+            <li>Lifetime alumni network access</li>
+          </ul>
+        </div>
+        <div class="card" style="margin-top:1rem;">
+          <div class="trust-row">
+            <div class="trust-item">
+              <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              SSL encrypted
+            </div>
+            <div class="trust-item">
+              <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+              Instant access
+            </div>
+            <div class="trust-item">
+              <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-3 3z"/></svg>
+              Paystack secured
+            </div>
+            <div class="trust-item">
+              <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-3 3z"/></svg>
+              24/7 support
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════ PAGE 2: PAYMENT ═══════════ -->
+  <div class="page" id="page-payment">
+    <div class="checkout-layout">
+      <div class="checkout-main">
+
+        <div class="card">
+          <div class="card-title">Payment</div>
+
+          <div class="paystack-badge">
+            You'll enter your card, bank transfer, or USSD details securely on Paystack's own payment screen — we never see or store your card details.
+          </div>
+
+          <button class="btn-submit" id="payBtn" onclick="payWithPaystack()">
+            <div class="spinner"></div>
+            <span class="btn-label" id="payBtnLabel">Pay $1,499 — Enroll Now</span>
+          </button>
+          <div class="pay-note">
+            <svg width="12" height="12" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/></svg>
+            Payment is processed securely by Paystack
+          </div>
+
+          <div style="margin-top:1.25rem; text-align:center;">
+            <button onclick="goBack()" style="background:none;border:none;font-family:var(--font);font-size:0.82rem;color:var(--muted);cursor:pointer;">← Back to course selection</button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Aside -->
+      <div class="checkout-aside">
+        <div class="card">
+          <div class="card-title">Order summary</div>
+          <div class="summary-course">
+            <div class="summary-icon" id="sumIcon2">🌐</div>
+            <div>
+              <div class="summary-course-name" id="sumName2">Full Stack Web Development</div>
+              <div class="summary-course-meta" id="sumMeta2">24 Weeks · Mentorship + Projects</div>
+            </div>
+          </div>
+          <div class="summary-line">
+            <span class="label">Tuition</span>
+            <span class="value" id="sumPrice2">$1,499</span>
+          </div>
+          <div class="summary-line">
+            <span class="label">Enrollment fee</span>
+            <span class="value" style="color:var(--success)">Waived</span>
+          </div>
+          <div class="summary-total">
+            <span>Due today</span>
+            <span class="value" id="sumTotal2">$1,499</span>
+          </div>
+          <ul class="includes-list" style="margin-top:1rem;">
+            <li>Immediate access after payment</li>
+            <li>Onboarding call scheduled within 24h</li>
+            <li>Course materials on Google Drive</li>
+            <li>Lifetime certificate on completion</li>
+          </ul>
+        </div>
+        <div class="card" style="margin-top:1rem; font-size:0.8rem; color:var(--muted); line-height:1.6;">
+          Questions? Email <a href="mailto:ops@esakris.edu" style="color:var(--accent);">ops@esakris.edu</a> or WhatsApp us. We typically reply within 2 hours.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════ PAGE 3: SUCCESS ═══════════ -->
+  <div class="page" id="page-success">
+    <div class="success-wrap">
+      <div class="success-card">
+        <div class="success-icon-wrap">
+          <svg width="34" height="34" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+          </svg>
+        </div>
+        <h1>You're enrolled! 🎉</h1>
+        <p class="success-sub">Welcome to Esakris. Your spot is confirmed and your learning journey starts now.</p>
+        <p class="redirect-note" id="redirectNote">Redirecting you to WhatsApp in <strong id="redirectCountdown">4</strong> seconds to complete onboarding...</p>
+
+        <div class="receipt-box">
+          <div class="receipt-row">
+            <span class="r-label">Student</span>
+            <span class="r-value" id="receiptName">—</span>
+          </div>
+          <div class="receipt-row">
+            <span class="r-label">Program</span>
+            <span class="r-value" id="receiptCourse">—</span>
+          </div>
+          <div class="receipt-row">
+            <span class="r-label">Duration</span>
+            <span class="r-value" id="receiptDuration">—</span>
+          </div>
+          <div class="receipt-row">
+            <span class="r-label">Confirmation sent to</span>
+            <span class="r-value" id="receiptEmail">—</span>
+          </div>
+          <div class="receipt-row">
+            <span class="r-label">Payment reference</span>
+            <span class="r-value" id="receiptRef">—</span>
+          </div>
+          <div class="receipt-row total">
+            <span class="r-label">Amount paid</span>
+            <span class="r-value" id="receiptAmount">—</span>
+          </div>
+        </div>
+
+        <div class="next-steps">
+          <div class="next-step">
+            <div class="next-step-num">1</div>
+            <div class="next-step-text">
+              <h5>Check your email</h5>
+              <p>A confirmation and your course access link have been sent. Check your spam folder too.</p>
+            </div>
+          </div>
+          <div class="next-step">
+            <div class="next-step-num">2</div>
+            <div class="next-step-text">
+              <h5>Message us on WhatsApp</h5>
+              <p>You'll be redirected automatically to chat with our team and schedule your onboarding.</p>
+            </div>
+          </div>
+          <div class="next-step">
+            <div class="next-step-num">3</div>
+            <div class="next-step-text">
+              <h5>Join the community</h5>
+              <p>A link to the private student community will be included in your welcome email.</p>
+            </div>
+          </div>
+        </div>
+
+        <button class="btn-home" onclick="goToWhatsApp()">
+          Continue to WhatsApp now
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ═══════════════════════════════════════════════════
+    // CONFIG — replace these with your real values
+    // ═══════════════════════════════════════════════════
+    const PAYSTACK_PUBLIC_KEY = 'pk_test_REPLACE_WITH_YOUR_PAYSTACK_PUBLIC_KEY';
+    // Paystack charges in the smallest currency unit (kobo for NGN).
+    // Course prices above are in USD — set the rate you want to charge in Naira.
+    const USD_TO_NGN_RATE = 1600; // TODO: update to your current rate, or switch CURRENCY below
+    const CURRENCY = 'NGN'; // NGN, GHS, ZAR, USD (only if your Paystack account supports it)
+
+    // WhatsApp number in international format, digits only, no + or leading 0
+    // e.g. Nigerian number 0803 123 4567 -> 2348031234567
+    const WHATSAPP_NUMBER = '2349155775787'; // TODO: replace with your WhatsApp number
+
+    // Google Apps Script Web App URL that appends a row to a Google Sheet.
+    // See the setup instructions provided alongside this file.
+    const GOOGLE_SHEET_WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbz5Yy4G05a9zI7bH4c5waTviJBI77y4_7CwKPPPm4vqUN1bwJpG51ef7O0rlqwEj2cP/exec';
+    // ═══════════════════════════════════════════════════
+
+    // ── State ──
+    let state = {
+      course: 'fullstack',
+      price: 1499,
+      label: 'Full Stack Web Development',
+      duration: '24 Weeks',
+      icon: '🌐',
+      firstName: '',
+      lastName: '',
+      email: '',
+      phone: '',
+      hearAbout: '',
+      friendName: '',
+      paystackRef: ''
+    };
+
+    // ── Course selection ──
+    document.querySelectorAll('.course-option').forEach(opt => {
+      opt.addEventListener('click', () => {
+        document.querySelectorAll('.course-option').forEach(o => o.classList.remove('selected'));
+        opt.classList.add('selected');
+        state.course    = opt.dataset.course;
+        state.price     = parseInt(opt.dataset.price);
+        state.label     = opt.dataset.label;
+        state.duration  = opt.dataset.duration;
+        state.icon      = opt.dataset.icon;
+        updateSummary();
+      });
+    });
+
+    function updateSummary() {
+      const fmt = '$' + state.price.toLocaleString();
+      ['sumName','sumName2'].forEach(id => { const el = document.getElementById(id); if(el) el.textContent = state.label; });
+      ['sumMeta','sumMeta2'].forEach(id => { const el = document.getElementById(id); if(el) el.textContent = state.duration + ' · Mentorship + Projects'; });
+      ['sumIcon','sumIcon2'].forEach(id => { const el = document.getElementById(id); if(el) el.textContent = state.icon; });
+      ['sumPrice','sumPrice2'].forEach(id => { const el = document.getElementById(id); if(el) el.textContent = fmt; });
+      ['sumTotal','sumTotal2'].forEach(id => { const el = document.getElementById(id); if(el) el.textContent = fmt; });
+      const payBtn = document.getElementById('payBtnLabel');
+      if (payBtn) payBtn.textContent = `Pay ${fmt} — Enroll Now`;
+    }
+
+    // ── Referral field toggle ──
+    function toggleFriendName() {
+      const val = document.getElementById('hearAbout').value;
+      const group = document.getElementById('friendNameGroup');
+      group.style.display = (val === 'Friend') ? 'block' : 'none';
+      if (val !== 'Friend') document.getElementById('friendName').classList.remove('error');
+    }
+
+    // ── Navigation ──
+    function showPage(id) {
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      document.getElementById('page-' + id).classList.add('active');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function setStep(n) {
+      [1,2,3].forEach(i => {
+        const el = document.getElementById('step' + i);
+        el.classList.remove('active','done');
+        if (i < n) el.classList.add('done');
+        if (i === n) el.classList.add('active');
+      });
+      const dividers = document.querySelectorAll('.step-divider');
+      dividers.forEach((d, i) => {
+        d.style.background = (i < n - 1) ? 'var(--success)' : 'var(--border)';
+      });
+    }
+
+    function goToPayment() {
+      let valid = true;
+
+      ['firstName','lastName'].forEach(id => {
+        const el = document.getElementById(id);
+        if (!el.value.trim()) { el.classList.add('error'); valid = false; }
+        else el.classList.remove('error');
+      });
+
+      const emailEl = document.getElementById('email');
+      const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailEl.value.trim());
+      if (!emailOk) { emailEl.classList.add('error'); valid = false; }
+      else emailEl.classList.remove('error');
+
+      const phoneEl = document.getElementById('phone');
+      if (!phoneEl.value.trim()) { phoneEl.classList.add('error'); valid = false; }
+      else phoneEl.classList.remove('error');
+
+      const hearAboutEl = document.getElementById('hearAbout');
+      if (!hearAboutEl.value) { hearAboutEl.classList.add('error'); valid = false; }
+      else hearAboutEl.classList.remove('error');
+
+      const friendNameEl = document.getElementById('friendName');
+      if (hearAboutEl.value === 'Friend' && !friendNameEl.value.trim()) {
+        friendNameEl.classList.add('error'); valid = false;
+      } else {
+        friendNameEl.classList.remove('error');
+      }
+
+      if (!valid) return;
+
+      state.firstName  = document.getElementById('firstName').value.trim();
+      state.lastName   = document.getElementById('lastName').value.trim();
+      state.email      = document.getElementById('email').value.trim();
+      state.phone      = phoneEl.value.trim();
+      state.hearAbout  = hearAboutEl.value;
+      state.friendName = hearAboutEl.value === 'Friend' ? friendNameEl.value.trim() : '';
+
+      setStep(2);
+      updateSummary();
+      showPage('payment');
+    }
+
+    function goBack() {
+      setStep(1);
+      showPage('course');
+    }
+
+    // ── Paystack payment ──
+    function payWithPaystack() {
+      if (!PAYSTACK_PUBLIC_KEY || PAYSTACK_PUBLIC_KEY.includes('REPLACE')) {
+        alert('Paystack public key is not set up yet. Add your key in the CONFIG section of this file.');
+        return;
+      }
+
+      const btn = document.getElementById('payBtn');
+      btn.classList.add('loading');
+
+      const amountInSmallestUnit = Math.round(state.price * USD_TO_NGN_RATE * 100);
+      const reference = 'ESK-' + Date.now() + '-' + Math.random().toString(36).substr(2,6).toUpperCase();
+
+      const handler = PaystackPop.setup({
+        key: PAYSTACK_PUBLIC_KEY,
+        email: state.email,
+        amount: amountInSmallestUnit,
+        currency: CURRENCY,
+        ref: reference,
+        metadata: {
+          custom_fields: [
+            { display_name: "Full Name", variable_name: "full_name", value: state.firstName + ' ' + state.lastName },
+            { display_name: "Phone", variable_name: "phone", value: state.phone },
+            { display_name: "Course", variable_name: "course", value: state.label },
+            { display_name: "Heard About Us", variable_name: "heard_about", value: state.hearAbout },
+            { display_name: "Friend Name", variable_name: "friend_name", value: state.friendName || 'N/A' }
+          ]
+        },
+        callback: function(response) {
+          state.paystackRef = response.reference;
+          recordRegistration();
+          showSuccess();
+        },
+        onClose: function() {
+          btn.classList.remove('loading');
+        }
+      });
+
+      handler.openIframe();
+    }
+
+    // ── Send registration data to Google Sheet ──
+    function recordRegistration() {
+      const payload = {
+        timestamp: new Date().toISOString(),
+        firstName: state.firstName,
+        lastName: state.lastName,
+        email: state.email,
+        phone: state.phone,
+        course: state.label,
+        amountPaid: state.price,
+        currency: CURRENCY,
+        heardAboutUs: state.hearAbout,
+        friendName: state.friendName,
+        paystackReference: state.paystackRef
+      };
+
+      if (!GOOGLE_SHEET_WEBHOOK_URL || GOOGLE_SHEET_WEBHOOK_URL.includes('REPLACE')) {
+        console.warn('Google Sheet webhook URL not configured — registration was not logged.', payload);
+        return;
+      }
+
+      // no-cors + text/plain is required to avoid CORS issues with Apps Script
+      fetch(GOOGLE_SHEET_WEBHOOK_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(payload)
+      }).catch(err => console.error('Could not log registration:', err));
+    }
+
+    let redirectTimer = null;
+
+    function showSuccess() {
+      setStep(3);
+
+      document.getElementById('receiptName').textContent     = state.firstName + ' ' + state.lastName;
+      document.getElementById('receiptCourse').textContent   = state.label;
+      document.getElementById('receiptDuration').textContent = state.duration;
+      document.getElementById('receiptEmail').textContent    = state.email;
+      document.getElementById('receiptRef').textContent      = state.paystackRef;
+      document.getElementById('receiptAmount').textContent   = '$' + state.price.toLocaleString();
+
+      showPage('success');
+
+      let seconds = 4;
+      const countdownEl = document.getElementById('redirectCountdown');
+      countdownEl.textContent = seconds;
+      redirectTimer = setInterval(() => {
+        seconds -= 1;
+        if (seconds <= 0) {
+          clearInterval(redirectTimer);
+          goToWhatsApp();
+        } else {
+          countdownEl.textContent = seconds;
+        }
+      }, 1000);
+    }
+
+    function goToWhatsApp() {
+      if (redirectTimer) clearInterval(redirectTimer);
+      const msg = `Hi! I just enrolled in ${state.label} at Esakris. My name is ${state.firstName} ${state.lastName} (Ref: ${state.paystackRef}). Looking forward to getting started!`;
+      window.location.href = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`;
+    }
+
+    // Init summary
+    updateSummary();
+  </script>
+</body>
+</html>
