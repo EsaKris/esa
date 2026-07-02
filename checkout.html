@@ -56,6 +56,14 @@
       top: 0;
       z-index: 100;
     }
+    /* Logo mark image */
+    .logo-mark {
+      flex-shrink: 0;
+      width: 34px;
+      height: 34px;
+      border-radius: 8px;
+      object-fit: contain;
+    }
     .topbar-logo {
       display: flex;
       align-items: center;
@@ -561,7 +569,7 @@
 
   <!-- Top bar -->
   <header class="topbar">
-      <a href="index.html" class="logo">
+    <a href="index.html" class="topbar-logo">
         <img src="esa.png" alt="Esakris logo" class="logo-mark">
         Esakris
       </a>
@@ -602,41 +610,41 @@
           <div class="card-title">Choose your program</div>
           <div class="course-options" id="courseOptions">
 
-            <div class="course-option selected" data-course="fullstack" data-price="1499" data-label="Full Stack Web Development" data-duration="24 Weeks" data-icon="🌐">
+            <div class="course-option selected" data-course="fullstack" data-price="10" data-label="Full Stack Web Development" data-duration="24 Weeks" data-icon="🌐">
+              <div class="popular-tag">Most Popular</div>
               <div class="course-radio"></div>
               <div class="course-info">
                 <div class="course-name">Full Stack Web Development</div>
                 <div class="course-meta">24 Weeks · Beginner to Pro</div>
               </div>
-              <div class="course-price">$1,499<div class="course-price-sub">one-time</div></div>
+              <div class="course-price">$10.00<div class="course-price-sub">one-time</div></div>
             </div>
 
-            <div class="course-option" data-course="backend" data-price="1199" data-label="Backend Development (Python)" data-duration="16 Weeks" data-icon="⚙️">
+            <div class="course-option" data-course="backend" data-price="10" data-label="Backend Development (Python)" data-duration="25 Weeks" data-icon="⚙️">
               <div class="course-radio"></div>
               <div class="course-info">
                 <div class="course-name">Backend Development (Python)</div>
-                <div class="course-meta">16 Weeks · Intermediate Target</div>
+                <div class="course-meta">25 Weeks · Intermediate Target</div>
               </div>
-              <div class="course-price">$1,199<div class="course-price-sub">one-time</div></div>
+              <div class="course-price">$10.00<div class="course-price-sub">one-time</div></div>
             </div>
 
-            <div class="course-option" data-course="mobile" data-price="1350" data-label="Mobile App Development" data-duration="20 Weeks" data-icon="📱">
-              <div class="popular-tag">Most Popular</div>
+            <div class="course-option" data-course="mobile" data-price="10" data-label="Mobile App Development" data-duration="20 Weeks" data-icon="📱">
               <div class="course-radio"></div>
               <div class="course-info">
                 <div class="course-name">Mobile App Development</div>
                 <div class="course-meta">20 Weeks · Beginner Friendly</div>
               </div>
-              <div class="course-price">$1,350<div class="course-price-sub">one-time</div></div>
+              <div class="course-price">$10.00<div class="course-price-sub">one-time</div></div>
             </div>
 
-            <div class="course-option" data-course="cyber" data-price="1499" data-label="Cybersecurity" data-duration="24 Weeks" data-icon="🛡️">
+            <div class="course-option" data-course="cyber" data-price="30" data-label="Cybersecurity" data-duration="24 Weeks" data-icon="🛡️">
               <div class="course-radio"></div>
               <div class="course-info">
                 <div class="course-name">Cybersecurity</div>
                 <div class="course-meta">24 Weeks · Comprehensive Track</div>
               </div>
-              <div class="course-price">$1,499<div class="course-price-sub">one-time</div></div>
+              <div class="course-price">$30.00<div class="course-price-sub">one-time</div></div>
             </div>
 
           </div>
@@ -710,7 +718,7 @@
           </div>
           <div class="summary-line">
             <span class="label">Tuition</span>
-            <span class="value" id="sumPrice">$1,499</span>
+            <span class="value" id="sumPrice">$10.00</span>
           </div>
           <div class="summary-line">
             <span class="label">Enrollment fee</span>
@@ -718,13 +726,12 @@
           </div>
           <div class="summary-total">
             <span>Total today</span>
-            <span class="value" id="sumTotal">$1,499</span>
+            <span class="value" id="sumTotal">$10.00</span>
           </div>
           <ul class="includes-list">
-            <li>Structured curriculum + live sessions</li>
             <li>1-on-1 mentor code reviews</li>
             <li>Accountability monitoring system</li>
-            <li>4 production-scale projects</li>
+            <li>Production-scale projects</li>
             <li>Verified certificate on completion</li>
             <li>Lifetime alumni network access</li>
           </ul>
@@ -767,7 +774,7 @@
 
           <button class="btn-submit" id="payBtn" onclick="payWithPaystack()">
             <div class="spinner"></div>
-            <span class="btn-label" id="payBtnLabel">Pay $1,499 — Enroll Now</span>
+            <span class="btn-label" id="payBtnLabel">Pay $10.00 — Enroll Now</span>
           </button>
           <div class="pay-note">
             <svg width="12" height="12" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/></svg>
@@ -794,7 +801,7 @@
           </div>
           <div class="summary-line">
             <span class="label">Tuition</span>
-            <span class="value" id="sumPrice2">$1,499</span>
+            <span class="value" id="sumPrice2">$10.00</span>
           </div>
           <div class="summary-line">
             <span class="label">Enrollment fee</span>
@@ -802,7 +809,7 @@
           </div>
           <div class="summary-total">
             <span>Due today</span>
-            <span class="value" id="sumTotal2">$1,499</span>
+            <span class="value" id="sumTotal2">$10.00</span>
           </div>
           <ul class="includes-list" style="margin-top:1rem;">
             <li>Immediate access after payment</li>
@@ -812,7 +819,7 @@
           </ul>
         </div>
         <div class="card" style="margin-top:1rem; font-size:0.8rem; color:var(--muted); line-height:1.6;">
-          Questions? Email <a href="mailto:ops@esakris.edu" style="color:var(--accent);">ops@esakris.edu</a> or WhatsApp us. We typically reply within 2 hours.
+          Questions? Email <a href="mailto:esachris00@gmail.com" style="color:var(--accent);">esachris00@gmail.com</a> or WhatsApp us. We typically reply within 2 hours.
         </div>
       </div>
     </div>
@@ -912,7 +919,7 @@
     // ── State ──
     let state = {
       course: 'fullstack',
-      price: 1499,
+      price: 10,
       label: 'Full Stack Web Development',
       duration: '24 Weeks',
       icon: '🌐',
